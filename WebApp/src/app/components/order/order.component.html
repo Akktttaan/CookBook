@@ -1,0 +1,36 @@
+<h1>Заказ</h1>
+<button mat-raised-button color="primary" (click)="createOrder()">
+  Сделать заказ
+</button>
+<table mat-table [dataSource]="orderDetails">
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Наименование </th>
+    <td mat-cell *matCellDef="let element"> {{element.dishRecipe.name}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="price">
+    <th mat-header-cell *matHeaderCellDef> Цена </th>
+    <td mat-cell *matCellDef="let element"> {{element.dishRecipe.price}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="quantity">
+    <th mat-header-cell *matHeaderCellDef> Порции</th>
+    <td mat-cell *matCellDef="let element"> {{element.quantity}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-raised-button color="warn" (click)="deleteQuantity(element)">
+        -
+      </button>
+      <button mat-raised-button color="primary" (click)="addQuantity(element)" style="margin-left: 10px">
+        +
+      </button>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

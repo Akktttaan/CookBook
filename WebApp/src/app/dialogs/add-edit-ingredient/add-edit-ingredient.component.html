@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>{{data.title}}</h1>
+<div mat-dialog-content>
+  <form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline">
+      <mat-label>Продукт</mat-label>
+      <mat-select formControlName="groceryItemId">
+        <mat-option *ngFor="let item of data.groceryItems" [value]="item.id">{{item.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Количество</mat-label>
+      <input matInput type="number" formControlName="quantity">
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Отмена</button>
+  <button mat-button type="submit" (click)="onSubmit()">Сохранить</button>
+</div>

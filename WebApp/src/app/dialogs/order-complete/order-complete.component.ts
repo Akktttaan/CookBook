@@ -1,0 +1,23 @@
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+
+@Component({
+  selector: 'app-order-complete',
+  templateUrl: './order-complete.component.html',
+  styleUrls: ['./order-complete.component.sass']
+})
+export class OrderCompleteComponent implements OnInit {
+
+  constructor(
+    public dialogRef: MatDialogRef<OrderCompleteComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+  ) {
+  }
+
+  ngOnInit(): void {
+  }
+
+  onSubmit() {
+    this.dialogRef.close();
+  }
+}

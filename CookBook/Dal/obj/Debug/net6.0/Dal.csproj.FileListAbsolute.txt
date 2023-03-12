@@ -1,0 +1,15 @@
+F:\Study\RKP\Lab1\CookBook\Dal\bin\Debug\net6.0\Dal.deps.json
+F:\Study\RKP\Lab1\CookBook\Dal\bin\Debug\net6.0\Dal.dll
+F:\Study\RKP\Lab1\CookBook\Dal\bin\Debug\net6.0\Dal.pdb
+F:\Study\RKP\Lab1\CookBook\Dal\bin\Debug\net6.0\Domain.dll
+F:\Study\RKP\Lab1\CookBook\Dal\bin\Debug\net6.0\Domain.pdb
+F:\Study\RKP\Lab1\CookBook\Dal\obj\Debug\net6.0\Dal.csproj.AssemblyReference.cache
+F:\Study\RKP\Lab1\CookBook\Dal\obj\Debug\net6.0\Dal.GeneratedMSBuildEditorConfig.editorconfig
+F:\Study\RKP\Lab1\CookBook\Dal\obj\Debug\net6.0\Dal.AssemblyInfoInputs.cache
+F:\Study\RKP\Lab1\CookBook\Dal\obj\Debug\net6.0\Dal.AssemblyInfo.cs
+F:\Study\RKP\Lab1\CookBook\Dal\obj\Debug\net6.0\Dal.csproj.CoreCompileInputs.cache
+F:\Study\RKP\Lab1\CookBook\Dal\obj\Debug\net6.0\Dal.csproj.CopyComplete
+F:\Study\RKP\Lab1\CookBook\Dal\obj\Debug\net6.0\Dal.dll
+F:\Study\RKP\Lab1\CookBook\Dal\obj\Debug\net6.0\refint\Dal.dll
+F:\Study\RKP\Lab1\CookBook\Dal\obj\Debug\net6.0\Dal.pdb
+F:\Study\RKP\Lab1\CookBook\Dal\obj\Debug\net6.0\ref\Dal.dll

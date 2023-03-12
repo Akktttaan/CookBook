@@ -1,0 +1,31 @@
+<h1>Рецепты</h1>
+<button mat-raised-button color="primary" (click)="addDishRecipe()">
+  Добавить рецепт
+</button>
+<table mat-table [dataSource]="dishRecipes" >
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> Наименование </th>
+    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+  </ng-container>
+  <ng-container matColumnDef="price">
+    <th mat-header-cell *matHeaderCellDef> Цена </th>
+    <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+  </ng-container>
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element" class="action-cell">
+      <button mat-button (click)="editDishRecipe(element)">
+        <mat-icon aria-label="Edit">edit</mat-icon>
+      </button>
+      <button mat-button (click)="deleteDishRecipe(element)">
+        <mat-icon aria-label="Delete">delete</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row class="custom-row"
+      *matRowDef="let row;
+      columns: displayedColumns;"
+  ></tr>
+</table>

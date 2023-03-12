@@ -1,0 +1,15 @@
+F:\Study\RKP\Lab1\CookBook\Domain\bin\Release\net6.0\Domain.deps.json
+F:\Study\RKP\Lab1\CookBook\Domain\bin\Release\net6.0\Domain.dll
+F:\Study\RKP\Lab1\CookBook\Domain\bin\Release\net6.0\Domain.pdb
+F:\Study\RKP\Lab1\CookBook\Domain\bin\Release\net6.0\Microsoft.Extensions.Configuration.Abstractions.dll
+F:\Study\RKP\Lab1\CookBook\Domain\bin\Release\net6.0\Microsoft.Extensions.Primitives.dll
+F:\Study\RKP\Lab1\CookBook\Domain\obj\Release\net6.0\Domain.csproj.AssemblyReference.cache
+F:\Study\RKP\Lab1\CookBook\Domain\obj\Release\net6.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+F:\Study\RKP\Lab1\CookBook\Domain\obj\Release\net6.0\Domain.AssemblyInfoInputs.cache
+F:\Study\RKP\Lab1\CookBook\Domain\obj\Release\net6.0\Domain.AssemblyInfo.cs
+F:\Study\RKP\Lab1\CookBook\Domain\obj\Release\net6.0\Domain.csproj.CoreCompileInputs.cache
+F:\Study\RKP\Lab1\CookBook\Domain\obj\Release\net6.0\Domain.csproj.CopyComplete
+F:\Study\RKP\Lab1\CookBook\Domain\obj\Release\net6.0\Domain.dll
+F:\Study\RKP\Lab1\CookBook\Domain\obj\Release\net6.0\refint\Domain.dll
+F:\Study\RKP\Lab1\CookBook\Domain\obj\Release\net6.0\Domain.pdb
+F:\Study\RKP\Lab1\CookBook\Domain\obj\Release\net6.0\ref\Domain.dll

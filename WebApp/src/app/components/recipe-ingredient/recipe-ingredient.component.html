@@ -1,0 +1,45 @@
+<h1>Добавить/изменить рецепт</h1>
+<form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+  <div class="flex-container">
+    <mat-form-field appearance="outline">
+      <mat-label>Наименование</mat-label>
+      <input matInput type="text" formControlName="name">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Цена</mat-label>
+      <input matInput type="number" formControlName="price">
+    </mat-form-field>
+    <button style="display: flex; justify-content: flex-end; align-items: center; height: 50px; margin-top: 5px"
+            mat-raised-button color="primary" type="submit">Сохранить</button>
+  </div>
+  <h2>Ингридиенты</h2>
+  <button type="button" mat-raised-button color="primary" (click)="addRecipeIngredient()">
+    Добавить ингридиент
+  </button>
+  <table mat-table [dataSource]="recipeIngredients" >
+    <ng-container matColumnDef="groceryItem">
+      <th mat-header-cell *matHeaderCellDef> Продукт </th>
+      <td mat-cell *matCellDef="let element"> {{element.groceryItemDescription}} </td>
+    </ng-container>
+    <ng-container matColumnDef="quantity">
+      <th mat-header-cell *matHeaderCellDef> Количество </th>
+      <td mat-cell *matCellDef="let element"> {{element.quantity}} {{element.groceryItemUnitOfMeasure}}</td>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let element" class="action-cell">
+        <button mat-button type="button" (click)="editRecipeIngredient(element)">
+          <mat-icon aria-label="Edit">edit</mat-icon>
+        </button>
+        <button mat-button type="button"v (click)="deleteRecipeIngredient(element)">
+          <mat-icon aria-label="Delete">delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row class="custom-row"
+        *matRowDef="let row;
+      columns: displayedColumns;"
+    ></tr>
+  </table>
+</form>
