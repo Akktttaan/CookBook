@@ -1,48 +1,48 @@
-/CookBook/bin/
-/CookBook/obj/
-/CookBook/packages/
+# Ignore build output
+bin/
+obj/
+packages/
+dist/
+tmp/
+out-tsc/
+bazel-out/
+
+# Ignore Node packages
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Ignore IDE and editor files
+WebApp/.idea/
+WebApp/.project
+WebApp/.classpath
+WebApp/.c9/
+WebApp/*.launch
+WebApp/.settings/
+WebApp/*.sublime-workspace
+WebApp/.history/
+WebApp/.vscode/
+
+# Ignore Angular cache and Sass cache
+WebApp/.angular/cache/
+WebApp/.sass-cache/
+
+# Ignore test and coverage files
+WebApp/connect.lock
+WebApp/coverage/
+WebApp/libpeerconnection.log
+WebApp/testem.log
+WebApp/typings/
+
+# Ignore system files
+WebApp/.DS_Store
+WebApp/Thumbs.db
+
+# Ignore files in CookBook
+.idea/.idea.CookBook/.idea
+bin/Debug/net6.0
+CookBook/bin/
+CookBook/obj/
+CookBook/packages/
 CookBook/riderModule.iml
 CookBook/_ReSharper.Caches/
-
-# See http://help.github.com/ignore-files/ for more about ignoring files.
-
-# Compiled output
-/WebApp/dist
-/WebApp/tmp
-/WebApp/out-tsc
-/WebApp/bazel-out
-
-/WebApp/# Node
-/WebApp//node_modules
-/WebApp/npm-debug.log
-/WebApp/yarn-error.log
-
-/WebApp/# IDEs and editors
-/WebApp/.idea/
-/WebApp/.project
-/WebApp/.classpath
-/WebApp/.c9/
-/WebApp/*.launch
-/WebApp/.settings/
-/WebApp/*.sublime-workspace
-
-/WebApp/# Visual Studio Code
-/WebApp/.vscode/*
-/WebApp/!.vscode/settings.json
-/WebApp/!.vscode/tasks.json
-/WebApp/!.vscode/launch.json
-/WebApp/!.vscode/extensions.json
-/WebApp/.history/*
-
-/WebApp/# Miscellaneous
-/WebApp/.angular/cache
-/WebApp/.sass-cache/
-/WebApp/connect.lock
-/WebApp/coverage
-/WebApp/libpeerconnection.log
-/WebApp/testem.log
-/WebApp/typings
-
-/WebApp/# System files
-/WebApp/.DS_Store
-/WebApp/Thumbs.db
