@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import {CookBookClient, DishType, UnitOfMeasure} from "../../../api/CoobBookClient";
+import {Component, OnInit} from '@angular/core';
+import {CookBookClient, UnitOfMeasure} from "../../../api/CoobBookClient";
 import {AddEditDialogComponent} from "../../dialogs/add-edit-dialog/add-edit-dialog.component";
-import {BehaviorSubject, filter, first, merge} from "rxjs";
+import {BehaviorSubject, filter, first, merge, Subject, tap} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
-import {Router} from "@angular/router";
+import {ErrorHandlerService} from "../../dialogs/error/error-handler.service";
 
 @Component({
   selector: 'app-unit-of-measure',
@@ -11,18 +11,22 @@ import {Router} from "@angular/router";
   styleUrls: ['./unit-of-measure.component.sass']
 })
 export class UnitOfMeasureComponent implements OnInit {
+  errorSbj = new Subject<string>()
   refreshSbj = new BehaviorSubject<boolean>(true);
   displayedColumns: string[] = [];
   unitOfMeasures: UnitOfMeasure[] = [];
 
   constructor(private api: CookBookClient,
-              private dialog: MatDialog) {
+              private dialog: MatDialog,
+              private error: ErrorHandlerService) {
     merge(this.refreshSbj)
       .subscribe(() => {
         api.unitOfMeasureAll()
           .pipe(first())
           .subscribe(x => this.unitOfMeasures = x);
       })
+
+    this.error.showError(this.errorSbj);
   }
 
   ngOnInit(): void {
@@ -32,7 +36,6 @@ export class UnitOfMeasureComponent implements OnInit {
   addUnitOfMeasure() {
     this.dialog.open(AddEditDialogComponent, {
       width: '400px',
-      height: '230px',
       data: {
         fieldsName: ['Наименование'],
         fields: ['name'],
@@ -40,7 +43,15 @@ export class UnitOfMeasureComponent implements OnInit {
       },
     })
       .afterClosed()
-      .pipe(first(), filter(x => !!x))
+      .pipe(
+        first(),
+        tap((x: UnitOfMeasure) => {
+          if(this.unitOfMeasures.map(x => x.name).includes(x.name)){
+            this.errorSbj.next("Такая единица измерения уже существует!")
+          }
+        }),
+        filter(x => !!x && this.unitOfMeasures.map(x => x.name).includes(x.name))
+      )
       .subscribe(data => {
         this.api.unitOfMeasurePOST(data)
           .subscribe(() => this.refreshSbj.next(true));
@@ -50,7 +61,6 @@ export class UnitOfMeasureComponent implements OnInit {
   editUnitOfMeasure(element: UnitOfMeasure) {
     this.dialog.open(AddEditDialogComponent, {
       width: '400px',
-      height: '230px',
       data: {
         fieldsName: ['Наименование'],
         fields: ['name'],
@@ -59,7 +69,15 @@ export class UnitOfMeasureComponent implements OnInit {
       },
     })
       .afterClosed()
-      .pipe(first(), filter(x => !!x))
+      .pipe(
+        first(),
+        tap((x: UnitOfMeasure) => {
+          if(this.unitOfMeasures.map(x => x.name).includes(x.name)){
+            this.errorSbj.next("Такая единица измерения уже существует!")
+          }
+        }),
+        filter(x => !!x && this.unitOfMeasures.map(x => x.name).includes(x.name))
+      )
       .subscribe(data => {
         data.id = element.id;
         this.api.unitOfMeasurePUT(data)

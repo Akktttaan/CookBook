@@ -942,7 +942,7 @@ export class CookBookClient {
    * @param body (optional)
    * @return Success
    */
-  addOrder(body: OrderDetailData[] | undefined): Observable<void> {
+  addOrder(body: OrderDetailData[] | undefined): Observable<OrderData> {
     let url_ = this.baseUrl + "/order/add-order";
     url_ = url_.replace(/[?&]$/, "");
 
@@ -954,6 +954,7 @@ export class CookBookClient {
       responseType: "blob",
       headers: new HttpHeaders({
         "Content-Type": "application/json",
+        "Accept": "text/plain"
       })
     };
 
@@ -964,23 +965,87 @@ export class CookBookClient {
         try {
           return this.processAddOrder(response_ as any);
         } catch (e) {
-          return _observableThrow(e) as any as Observable<void>;
+          return _observableThrow(e) as any as Observable<OrderData>;
         }
       } else
-        return _observableThrow(response_) as any as Observable<void>;
+        return _observableThrow(response_) as any as Observable<OrderData>;
     }));
   }
 
-  protected processAddOrder(response: HttpResponseBase): Observable<void> {
+  protected processAddOrder(response: HttpResponseBase): Observable<OrderData> {
     const status = response.status;
     const responseBlob =
       response instanceof HttpResponse ? response.body :
         (response as any).error instanceof Blob ? (response as any).error : undefined;
 
     let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-    if (status === 204) {
+    if (status === 200) {
       return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-        return _observableOf(null as any);
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = OrderData.fromJS(resultData200);
+        return _observableOf(result200);
+      }));
+    } else if (status !== 200 && status !== 204) {
+      return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+        return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+      }));
+    }
+    return _observableOf(null as any);
+  }
+
+  /**
+   * @param dateFrom (optional)
+   * @param dateTo (optional)
+   * @return Success
+   */
+  allOrder(dateFrom: Date | undefined, dateTo: Date | undefined): Observable<ReportData> {
+    let url_ = this.baseUrl + "/order/all-order?";
+    if (dateFrom === null)
+      throw new Error("The parameter 'dateFrom' cannot be null.");
+    else if (dateFrom !== undefined)
+      url_ += "dateFrom=" + encodeURIComponent(dateFrom ? "" + dateFrom.toISOString() : "") + "&";
+    if (dateTo === null)
+      throw new Error("The parameter 'dateTo' cannot be null.");
+    else if (dateTo !== undefined)
+      url_ += "dateTo=" + encodeURIComponent(dateTo ? "" + dateTo.toISOString() : "") + "&";
+    url_ = url_.replace(/[?&]$/, "");
+
+    let options_ : any = {
+      observe: "response",
+      responseType: "blob",
+      headers: new HttpHeaders({
+        "Accept": "text/plain"
+      })
+    };
+
+    return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+      return this.processAllOrder(response_);
+    })).pipe(_observableCatch((response_: any) => {
+      if (response_ instanceof HttpResponseBase) {
+        try {
+          return this.processAllOrder(response_ as any);
+        } catch (e) {
+          return _observableThrow(e) as any as Observable<ReportData>;
+        }
+      } else
+        return _observableThrow(response_) as any as Observable<ReportData>;
+    }));
+  }
+
+  protected processAllOrder(response: HttpResponseBase): Observable<ReportData> {
+    const status = response.status;
+    const responseBlob =
+      response instanceof HttpResponse ? response.body :
+        (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+    let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+    if (status === 200) {
+      return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+        let result200: any = null;
+        let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+        result200 = ReportData.fromJS(resultData200);
+        return _observableOf(result200);
       }));
     } else if (status !== 200 && status !== 204) {
       return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -1593,7 +1658,7 @@ export class DishRecipe implements IDishRecipe {
   name?: string | undefined;
   cuisineCategoryId?: number;
   dishTypeId?: number;
-  price?: number;
+  margin?: number;
 
   constructor(data?: IDishRecipe) {
     if (data) {
@@ -1610,7 +1675,7 @@ export class DishRecipe implements IDishRecipe {
       this.name = _data["name"];
       this.cuisineCategoryId = _data["cuisineCategoryId"];
       this.dishTypeId = _data["dishTypeId"];
-      this.price = _data["price"];
+      this.margin = _data["margin"];
     }
   }
 
@@ -1627,7 +1692,7 @@ export class DishRecipe implements IDishRecipe {
     data["name"] = this.name;
     data["cuisineCategoryId"] = this.cuisineCategoryId;
     data["dishTypeId"] = this.dishTypeId;
-    data["price"] = this.price;
+    data["margin"] = this.margin;
     return data;
   }
 }
@@ -1637,7 +1702,7 @@ export interface IDishRecipe {
   name?: string | undefined;
   cuisineCategoryId?: number;
   dishTypeId?: number;
-  price?: number;
+  margin?: number;
 }
 
 export class DishRecipeData implements IDishRecipeData {
@@ -1646,7 +1711,7 @@ export class DishRecipeData implements IDishRecipeData {
   cuisineCategoryId?: number;
   dishTypeId?: number;
   recipeIngredients?: RecipeIngredientData[] | undefined;
-  price?: number;
+  margin?: number;
 
   constructor(data?: IDishRecipeData) {
     if (data) {
@@ -1668,7 +1733,7 @@ export class DishRecipeData implements IDishRecipeData {
         for (let item of _data["recipeIngredients"])
           this.recipeIngredients!.push(RecipeIngredientData.fromJS(item));
       }
-      this.price = _data["price"];
+      this.margin = _data["margin"];
     }
   }
 
@@ -1690,7 +1755,7 @@ export class DishRecipeData implements IDishRecipeData {
       for (let item of this.recipeIngredients)
         data["recipeIngredients"].push(item.toJSON());
     }
-    data["price"] = this.price;
+    data["margin"] = this.margin;
     return data;
   }
 }
@@ -1701,7 +1766,51 @@ export interface IDishRecipeData {
   cuisineCategoryId?: number;
   dishTypeId?: number;
   recipeIngredients?: RecipeIngredientData[] | undefined;
-  price?: number;
+  margin?: number;
+}
+
+export class DishReport implements IDishReport {
+  name?: string | undefined;
+  quantity?: number;
+  sum?: number;
+
+  constructor(data?: IDishReport) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data["name"];
+      this.quantity = _data["quantity"];
+      this.sum = _data["sum"];
+    }
+  }
+
+  static fromJS(data: any): DishReport {
+    data = typeof data === 'object' ? data : {};
+    let result = new DishReport();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["name"] = this.name;
+    data["quantity"] = this.quantity;
+    data["sum"] = this.sum;
+    return data;
+  }
+}
+
+export interface IDishReport {
+  name?: string | undefined;
+  quantity?: number;
+  sum?: number;
 }
 
 export class DishType implements IDishType {
@@ -1844,6 +1953,106 @@ export interface IGroceryItemData {
   price?: number;
 }
 
+export class GroceryItemReport implements IGroceryItemReport {
+  name?: string | undefined;
+  quantity?: number;
+  unitOfMeasure?: string | undefined;
+  sum?: number;
+
+  constructor(data?: IGroceryItemReport) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.name = _data["name"];
+      this.quantity = _data["quantity"];
+      this.unitOfMeasure = _data["unitOfMeasure"];
+      this.sum = _data["sum"];
+    }
+  }
+
+  static fromJS(data: any): GroceryItemReport {
+    data = typeof data === 'object' ? data : {};
+    let result = new GroceryItemReport();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["name"] = this.name;
+    data["quantity"] = this.quantity;
+    data["unitOfMeasure"] = this.unitOfMeasure;
+    data["sum"] = this.sum;
+    return data;
+  }
+}
+
+export interface IGroceryItemReport {
+  name?: string | undefined;
+  quantity?: number;
+  unitOfMeasure?: string | undefined;
+  sum?: number;
+}
+
+export class OrderData implements IOrderData {
+  id?: number;
+  orderDate?: Date;
+  orderDetails?: OrderDetailData[] | undefined;
+
+  constructor(data?: IOrderData) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data["id"];
+      this.orderDate = _data["orderDate"] ? new Date(_data["orderDate"].toString()) : <any>undefined;
+      if (Array.isArray(_data["orderDetails"])) {
+        this.orderDetails = [] as any;
+        for (let item of _data["orderDetails"])
+          this.orderDetails!.push(OrderDetailData.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): OrderData {
+    data = typeof data === 'object' ? data : {};
+    let result = new OrderData();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data["id"] = this.id;
+    data["orderDate"] = this.orderDate ? this.orderDate.toISOString() : <any>undefined;
+    if (Array.isArray(this.orderDetails)) {
+      data["orderDetails"] = [];
+      for (let item of this.orderDetails)
+        data["orderDetails"].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IOrderData {
+  id?: number;
+  orderDate?: Date;
+  orderDetails?: OrderDetailData[] | undefined;
+}
+
 export class OrderDetailData implements IOrderDetailData {
   orderId?: number;
   dishRecipe?: DishRecipeData;
@@ -1940,9 +2149,8 @@ export class RecipeIngredientData implements IRecipeIngredientData {
   id?: number | undefined;
   dishRecipeId?: number;
   groceryItemId?: number;
-  groceryItemDescription?: string | undefined;
+  groceryItem?: GroceryItemData;
   quantity?: number;
-  groceryItemUnitOfMeasure?: string | undefined;
 
   constructor(data?: IRecipeIngredientData) {
     if (data) {
@@ -1958,9 +2166,8 @@ export class RecipeIngredientData implements IRecipeIngredientData {
       this.id = _data["id"];
       this.dishRecipeId = _data["dishRecipeId"];
       this.groceryItemId = _data["groceryItemId"];
-      this.groceryItemDescription = _data["groceryItemDescription"];
+      this.groceryItem = _data["groceryItem"] ? GroceryItemData.fromJS(_data["groceryItem"]) : <any>undefined;
       this.quantity = _data["quantity"];
-      this.groceryItemUnitOfMeasure = _data["groceryItemUnitOfMeasure"];
     }
   }
 
@@ -1976,9 +2183,8 @@ export class RecipeIngredientData implements IRecipeIngredientData {
     data["id"] = this.id;
     data["dishRecipeId"] = this.dishRecipeId;
     data["groceryItemId"] = this.groceryItemId;
-    data["groceryItemDescription"] = this.groceryItemDescription;
+    data["groceryItem"] = this.groceryItem ? this.groceryItem.toJSON() : <any>undefined;
     data["quantity"] = this.quantity;
-    data["groceryItemUnitOfMeasure"] = this.groceryItemUnitOfMeasure;
     return data;
   }
 }
@@ -1987,9 +2193,64 @@ export interface IRecipeIngredientData {
   id?: number | undefined;
   dishRecipeId?: number;
   groceryItemId?: number;
-  groceryItemDescription?: string | undefined;
+  groceryItem?: GroceryItemData;
   quantity?: number;
-  groceryItemUnitOfMeasure?: string | undefined;
+}
+
+export class ReportData implements IReportData {
+  dishRecipes?: DishReport[] | undefined;
+  groceryItems?: GroceryItemReport[] | undefined;
+
+  constructor(data?: IReportData) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
+    }
+  }
+
+  init(_data?: any) {
+    if (_data) {
+      if (Array.isArray(_data["dishRecipes"])) {
+        this.dishRecipes = [] as any;
+        for (let item of _data["dishRecipes"])
+          this.dishRecipes!.push(DishReport.fromJS(item));
+      }
+      if (Array.isArray(_data["groceryItems"])) {
+        this.groceryItems = [] as any;
+        for (let item of _data["groceryItems"])
+          this.groceryItems!.push(GroceryItemReport.fromJS(item));
+      }
+    }
+  }
+
+  static fromJS(data: any): ReportData {
+    data = typeof data === 'object' ? data : {};
+    let result = new ReportData();
+    result.init(data);
+    return result;
+  }
+
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    if (Array.isArray(this.dishRecipes)) {
+      data["dishRecipes"] = [];
+      for (let item of this.dishRecipes)
+        data["dishRecipes"].push(item.toJSON());
+    }
+    if (Array.isArray(this.groceryItems)) {
+      data["groceryItems"] = [];
+      for (let item of this.groceryItems)
+        data["groceryItems"].push(item.toJSON());
+    }
+    return data;
+  }
+}
+
+export interface IReportData {
+  dishRecipes?: DishReport[] | undefined;
+  groceryItems?: GroceryItemReport[] | undefined;
 }
 
 export class UnitOfMeasure implements IUnitOfMeasure {

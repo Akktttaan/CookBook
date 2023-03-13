@@ -1,5 +1,14 @@
+<h1 mat-dialog-title>Заказ №{{orderReport.id}}</h1>
 <div mat-dialog-content>
-  <h1>Заказ выполнен!</h1>
+  <p>Дата заказа: {{orderReport.orderDate | date: 'dd.MM.yyyy'}}</p>
+  <div *ngFor="let order of orderReport.orderDetails">
+    {{order.dishRecipe?.name}} x {{order.quantity}} = {{getRecipePrice(order)}}$
+    <div *ngFor="let recipe of order.dishRecipe?.recipeIngredients">
+      &nbsp;&nbsp;&nbsp;&nbsp;{{recipe.groceryItem?.name}} {{getGroceryItemQuantity(order, recipe)}}
+      {{recipe.groceryItem?.unitOfMeasureDescription}} = {{getGroceryItemPrice(order, recipe)}}$
+    </div>
+    <br>
+  </div>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onSubmit()">Закрыть</button>

@@ -10,8 +10,8 @@
   </ng-container>
 
   <ng-container matColumnDef="price">
-    <th mat-header-cell *matHeaderCellDef> Цена </th>
-    <td mat-cell *matCellDef="let element"> {{element.dishRecipe.price}} </td>
+    <th mat-header-cell *matHeaderCellDef> Наценка(%) </th>
+    <td mat-cell *matCellDef="let element"> {{element.dishRecipe.margin}} </td>
   </ng-container>
 
   <ng-container matColumnDef="quantity">

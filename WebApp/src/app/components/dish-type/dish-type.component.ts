@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {CookBookClient, DishType} from "../../../api/CoobBookClient";
 import {AddEditDialogComponent} from "../../dialogs/add-edit-dialog/add-edit-dialog.component";
-import {BehaviorSubject, filter, first, merge} from "rxjs";
+import {BehaviorSubject, filter, first, merge, Subject, tap} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {ActivatedRoute, Router} from "@angular/router";
+import {ErrorHandlerService} from "../../dialogs/error/error-handler.service";
 
 @Component({
   selector: 'app-dish-type',
@@ -11,6 +12,7 @@ import {ActivatedRoute, Router} from "@angular/router";
   styleUrls: ['./dish-type.component.sass']
 })
 export class DishTypeComponent implements OnInit {
+  errorSbj = new Subject<string>();
   refreshSbj = new BehaviorSubject<boolean>(true);
   dishTypes: DishType[] = [];
   displayedColumns: string[] = [];
@@ -18,13 +20,15 @@ export class DishTypeComponent implements OnInit {
   constructor(private api: CookBookClient,
               private dialog: MatDialog,
               private router: Router,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private error: ErrorHandlerService) {
     merge(this.refreshSbj)
       .subscribe(() => {
         api.dishTypeAll()
           .pipe(first())
           .subscribe(x => this.dishTypes = x);
       })
+    this.error.showError(this.errorSbj);
   }
 
   ngOnInit(): void {
@@ -34,7 +38,6 @@ export class DishTypeComponent implements OnInit {
   addDishType() {
     this.dialog.open(AddEditDialogComponent, {
       width: '400px',
-      height: '230px',
       data: {
         fieldsName: ['Наименование'],
         fields: ['name'],
@@ -42,7 +45,15 @@ export class DishTypeComponent implements OnInit {
       },
     })
       .afterClosed()
-      .pipe(first(), filter(x => !!x))
+      .pipe(
+        first(),
+        tap((data: DishType) => {
+          if(this.dishTypes.map(x => x.name).includes(data.name)){
+            this.errorSbj.next("Такой тип блюда уже существует!")
+          }
+        }),
+        filter(x => !!x && !this.dishTypes.map(x => x.name).includes(x.name))
+      )
       .subscribe(data => {
         this.api.dishTypePOST(data)
           .subscribe(() => this.refreshSbj.next(true));
@@ -52,7 +63,6 @@ export class DishTypeComponent implements OnInit {
   editDishType(element: DishType) {
     this.dialog.open(AddEditDialogComponent, {
       width: '400px',
-      height: '230px',
       data: {
         fieldsName: ['Наименование'],
         fields: ['name'],

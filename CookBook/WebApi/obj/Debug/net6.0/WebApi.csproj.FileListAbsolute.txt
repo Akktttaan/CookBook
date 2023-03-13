@@ -73,3 +73,10 @@ F:\Study\RKP\Lab1\CookBook\WebApi\bin\Debug\net6.0\Services.dll
 F:\Study\RKP\Lab1\CookBook\WebApi\bin\Debug\net6.0\Services.pdb
 F:\Study\RKP\Lab1\CookBook\WebApi\bin\Debug\net6.0\Dal.dll
 F:\Study\RKP\Lab1\CookBook\WebApi\bin\Debug\net6.0\Dal.pdb
+F:\Study\RKP\Lab1\CookBook\WebApi\bin\Debug\net6.0\ClosedXML.dll
+F:\Study\RKP\Lab1\CookBook\WebApi\bin\Debug\net6.0\DocumentFormat.OpenXml.dll
+F:\Study\RKP\Lab1\CookBook\WebApi\bin\Debug\net6.0\ExcelNumberFormat.dll
+F:\Study\RKP\Lab1\CookBook\WebApi\bin\Debug\net6.0\Irony.dll
+F:\Study\RKP\Lab1\CookBook\WebApi\bin\Debug\net6.0\SixLabors.Fonts.dll
+F:\Study\RKP\Lab1\CookBook\WebApi\bin\Debug\net6.0\System.IO.Packaging.dll
+F:\Study\RKP\Lab1\CookBook\WebApi\bin\Debug\net6.0\XLParser.dll

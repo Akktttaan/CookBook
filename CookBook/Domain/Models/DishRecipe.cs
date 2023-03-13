@@ -26,7 +26,7 @@ public class DishRecipe : IBaseEntity
     public int DishTypeId { get; set; }
 
     /// <summary>
-    /// Цена блюда.
+    /// Наценка блюда
     /// </summary>
-    public decimal Price { get; set; }
+    public decimal Margin { get; set; }
 }

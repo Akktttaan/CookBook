@@ -17,18 +17,10 @@ public class RecipeIngredientData
     /// </summary>
     public int GroceryItemId { get; set; }
 
-    /// <summary>
-    /// Описание продукта
-    /// </summary>
-    public string GroceryItemDescription { get; set; }
+    public GroceryItemData GroceryItem { get; set; }
 
     /// <summary>
     /// Количество ингредиента.
     /// </summary>
     public int Quantity { get; set; }
-    
-    /// <summary>
-    /// Единица измерения продукта
-    /// </summary>
-    public string GroceryItemUnitOfMeasure { get; set; }
 }

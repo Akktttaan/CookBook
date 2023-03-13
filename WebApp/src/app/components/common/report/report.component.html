@@ -1,0 +1,28 @@
+<h1>Общий отчет</h1>
+
+<form [formGroup]="dataForm" (ngSubmit)="onSubmit()">
+  <mat-form-field appearance="fill">
+    <mat-label>Введите промежуток времени</mat-label>
+    <mat-date-range-input [rangePicker]="picker">
+      <input matStartDate placeholder="Start date" formControlName="dateFrom">
+      <input matEndDate placeholder="End date" formControlName="dateTo">
+    </mat-date-range-input>
+    <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker></mat-date-range-picker>
+  </mat-form-field>
+
+  <button type="submit" mat-raised-button color="primary" style="margin-left: 60px">Выгрузить отчет</button>
+</form>
+<br><br>
+<div *ngFor="let item of allOrder.dishRecipes">
+  {{item.name}} x {{item.quantity}} = {{item.sum}}$
+  <br>
+</div>
+<br><br>
+
+<div *ngFor="let item of allOrder.groceryItems">
+  {{item.name}} {{item.quantity}} {{item.unitOfMeasure}} = {{item.sum}}$
+  <br>
+</div>
+

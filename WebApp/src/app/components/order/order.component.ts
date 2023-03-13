@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {CookBookClient, OrderDetailData} from "../../../api/CoobBookClient";
-import {BehaviorSubject, first, merge} from "rxjs";
+import {CookBookClient, OrderData, OrderDetailData} from "../../../api/CoobBookClient";
+import {BehaviorSubject, first, merge, tap} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
 import {OrderCompleteComponent} from "../../dialogs/order-complete/order-complete.component";
 
@@ -44,10 +44,12 @@ export class OrderComponent implements OnInit {
 
   createOrder() {
     this.api.addOrder(this.orderDetails)
-      .subscribe(() => {
+      .subscribe(data => {
         this.dialog.open(OrderCompleteComponent, {
           width: '400px',
-          height: '150px'
+          data: {
+            data: data
+          }
         })
           .afterClosed()
           .pipe(first())

@@ -2,9 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {CookBookClient, DishType, GroceryItem, UnitOfMeasure} from "../../../api/CoobBookClient";
 import {MatDialog} from "@angular/material/dialog";
 import {Router} from "@angular/router";
-import {BehaviorSubject, filter, first, merge} from "rxjs";
+import {BehaviorSubject, filter, first, merge, Subject, tap} from "rxjs";
 import {AddEditDialogComponent} from "../../dialogs/add-edit-dialog/add-edit-dialog.component";
 import {AddEditGroceryItemComponent} from "../../dialogs/add-edit-grocery-item/add-edit-grocery-item.component";
+import {ErrorHandlerService} from "../../dialogs/error/error-handler.service";
 
 @Component({
   selector: 'app-grocery-item',
@@ -12,6 +13,7 @@ import {AddEditGroceryItemComponent} from "../../dialogs/add-edit-grocery-item/a
   styleUrls: ['./grocery-item.component.sass']
 })
 export class GroceryItemComponent implements OnInit {
+  errorSbj = new Subject<string>()
   refreshSbj = new BehaviorSubject<boolean>(true);
   groceryItems: DishType[] = [];
   displayedColumns: string[] = [];
@@ -19,7 +21,7 @@ export class GroceryItemComponent implements OnInit {
 
   constructor(private api: CookBookClient,
               private dialog: MatDialog,
-              private router: Router) {
+              private error: ErrorHandlerService) {
     merge(this.refreshSbj)
       .subscribe(() => {
         api.itemAll()
@@ -30,6 +32,8 @@ export class GroceryItemComponent implements OnInit {
       .subscribe(data => {
         this.unitOfMeasures = data;
       })
+
+    this.error.showError(this.errorSbj)
   }
 
   ngOnInit(): void {
@@ -39,14 +43,21 @@ export class GroceryItemComponent implements OnInit {
   addGroceryItem() {
     this.dialog.open(AddEditGroceryItemComponent, {
       width: '400px',
-      height: '380px',
       data: {
         title: 'Добавить продукт',
         unitOfMeasures: this.unitOfMeasures
       }
     })
       .afterClosed()
-      .pipe(first(), filter(x => !!x))
+      .pipe(
+        first(),
+        tap((x: GroceryItem) => {
+          if(this.groceryItems.map(x => x.name).includes(x.name)){
+            this.errorSbj.next("Такой продукт уже существует!")
+          }
+        }),
+        filter(x => !!x && !this.groceryItems.map(x => x.name).includes(x.name))
+      )
       .subscribe(data => {
         this.api.itemPOST(data)
           .subscribe(() => this.refreshSbj.next(true));
@@ -56,7 +67,6 @@ export class GroceryItemComponent implements OnInit {
   editGroceryItem(element: GroceryItem) {
     this.dialog.open(AddEditGroceryItemComponent, {
       width: '400px',
-      height: '380px',
       data: {
         title: 'Изменить продукт',
         unitOfMeasures: this.unitOfMeasures,

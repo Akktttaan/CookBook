@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {BehaviorSubject, filter, first, merge} from "rxjs";
-import {CookBookClient, CuisineCategory} from "../../../../api/CoobBookClient";
+import {BehaviorSubject, catchError, filter, first, merge, Subject, tap, throwError} from "rxjs";
+import {ApiException, CookBookClient, CuisineCategory} from "../../../../api/CoobBookClient";
 import {MatDialog} from "@angular/material/dialog";
 import {AddEditDialogComponent} from "../../../dialogs/add-edit-dialog/add-edit-dialog.component";
 import {Router} from "@angular/router";
+import {ErrorHandlerService} from "../../../dialogs/error/error-handler.service";
 
 @Component({
   selector: 'app-home',
@@ -11,19 +12,23 @@ import {Router} from "@angular/router";
   styleUrls: ['./home.component.sass']
 })
 export class HomeComponent implements OnInit {
+  errorSbj = new Subject<string>();
   refreshSbj = new BehaviorSubject<boolean>(true);
   cuisineCategories: CuisineCategory[] = []
   displayedColumns: string[] = [];
 
   constructor(private api: CookBookClient,
               private dialog: MatDialog,
-              private router: Router) {
+              private router: Router,
+              private error: ErrorHandlerService) {
     merge(this.refreshSbj)
       .subscribe(() => {
         api.categoryAll()
           .pipe(first())
           .subscribe(x => this.cuisineCategories = x);
       })
+
+    this.error.showError(this.errorSbj);
   }
 
   ngOnInit(): void {
@@ -33,7 +38,6 @@ export class HomeComponent implements OnInit {
   addCuisineCategory() {
     this.dialog.open(AddEditDialogComponent, {
       width: '400px',
-      height: '230px',
       data: {
         fieldsName: ['Наименование'],
         fields: ['name'],
@@ -41,9 +45,16 @@ export class HomeComponent implements OnInit {
       },
     })
       .afterClosed()
-      .pipe(first(), filter(x => !!x))
+      .pipe(
+        first(),
+        tap((data: CuisineCategory) => {
+          if(this.cuisineCategories.map(x => x.name).includes(data.name)){
+            this.errorSbj.next("Такая категория уже существует в базе!")
+          }
+        }),
+        filter(x => !!x && !this.cuisineCategories.map(x => x.name).includes(x.name))
+      )
       .subscribe(data => {
-        console.log(data);
         this.api.categoryPOST(new CuisineCategory(data))
           .subscribe(() => this.refreshSbj.next(true));
       });
@@ -57,7 +68,6 @@ export class HomeComponent implements OnInit {
   editCuisineCategory(row: CuisineCategory) {
     this.dialog.open(AddEditDialogComponent, {
       width: '400px',
-      height: '230px',
       data: {
         fieldsName: ['Наименование'],
         fields: ['name'],

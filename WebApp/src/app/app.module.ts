@@ -29,6 +29,10 @@ import { AddEditIngredientComponent } from './dialogs/add-edit-ingredient/add-ed
 import { OrderComponent } from './components/order/order.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import { OrderCompleteComponent } from './dialogs/order-complete/order-complete.component';
+import { ErrorComponent } from './dialogs/error/error.component';
+import { ReportComponent } from './components/common/report/report.component';
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MAT_DATE_LOCALE, MatNativeDateModule} from "@angular/material/core";
 
 const routes: Routes = [
   {
@@ -55,6 +59,9 @@ const routes: Routes = [
   }, {
     path: 'order',
     component: OrderComponent
+  },{
+    path: 'report',
+    component: ReportComponent
   }, {
     path: '**',
     component: NotFoundComponent
@@ -77,7 +84,9 @@ const routes: Routes = [
     AddEditGroceryItemComponent,
     AddEditIngredientComponent,
     OrderComponent,
-    OrderCompleteComponent
+    OrderCompleteComponent,
+    ErrorComponent,
+    ReportComponent
   ],
   imports: [
     HttpClientModule,
@@ -93,11 +102,14 @@ const routes: Routes = [
     ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   providers: [
     {provide: API_BASE_URL, useValue: environment.apiUrl},
-    CookBookClient
+    CookBookClient,
+    {provide: MAT_DATE_LOCALE, useValue: 'ru-RU'},
   ],
   bootstrap: [AppComponent]
 })

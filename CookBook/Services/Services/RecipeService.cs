@@ -26,7 +26,7 @@ public class RecipeService : IRecipeService
             {
                 Id = recipe.Id,
                 Name = recipe.Name,
-                Price = recipe.Price
+                Margin = recipe.Margin
             })
             .ToArray();
     }
@@ -39,7 +39,7 @@ public class RecipeService : IRecipeService
         {
             CuisineCategoryId = dishRecipe.CuisineCategoryId,
             Name = dishRecipe.Name,
-            Price = dishRecipe.Price,
+            Margin = dishRecipe.Margin,
             DishTypeId = dishRecipe.DishTypeId
         };
 
@@ -68,7 +68,7 @@ public class RecipeService : IRecipeService
             Id = dishRecipe.Id,
             CuisineCategoryId = dishRecipe.CuisineCategoryId,
             Name = dishRecipe.Name,
-            Price = dishRecipe.Price,
+            Margin = dishRecipe.Margin,
             DishTypeId = dishRecipe.DishTypeId
         };
 
@@ -112,6 +112,8 @@ public class RecipeService : IRecipeService
         var ingredientRepository = _unitOfWork.GetRepository<RecipeIngredient>();
         var groceryRepository = _unitOfWork.GetRepository<GroceryItem>();
         var unitOfMeasureRepository = _unitOfWork.GetRepository<UnitOfMeasure>();
+        var unitOfMeasures = await unitOfMeasureRepository.GetAll();
+        var groceryItems = await groceryRepository.GetAll();
         var query = await ingredientRepository.GetAll();
 
         return query
@@ -122,10 +124,19 @@ public class RecipeService : IRecipeService
                 DishRecipeId = x.DishRecipeId,
                 GroceryItemId = x.GroceryItemId,
                 Quantity = x.Quantity,
-                GroceryItemDescription = groceryRepository.GetById(x.GroceryItemId).Result.Name,
-                GroceryItemUnitOfMeasure = unitOfMeasureRepository
-                    .GetById(groceryRepository
-                        .GetById(x.GroceryItemId).Result.UnitOfMeasureId.Value).Result.Name
+                GroceryItem = groceryItems
+                    .Where(z => z.Id == x.GroceryItemId)
+                    .Select(y => new GroceryItemData()
+                    {
+                        Id = y.Id,
+                        Name = y.Name,
+                        Price = y.Price,
+                        UnitOfMeasureId = y.UnitOfMeasureId,
+                        UnitOfMeasureDescription = unitOfMeasures
+                            .Where(j => j.Id == y.UnitOfMeasureId)
+                            .Select(i => i.Name)
+                            .First()
+                    }).First()
             }).ToArray();
     }
 

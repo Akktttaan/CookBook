@@ -30,5 +30,5 @@ public class DishRecipeData
     /// <summary>
     /// Цена блюда.
     /// </summary>
-    public decimal Price { get; set; }
+    public decimal Margin { get; set; }
 }

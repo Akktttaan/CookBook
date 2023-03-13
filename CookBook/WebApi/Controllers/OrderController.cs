@@ -19,13 +19,23 @@ public class OrderController : Controller
     }
     
     [HttpPost("add-order")]
-    [ProducesResponseType(204)]
+    [ProducesResponseType(typeof(OrderData),200)]
     [AllowAnonymous]
     public async Task<IActionResult> AddOrder([FromBody] OrderDetailData[] orderDetails)
     {
-        await _orderService.AddOrder(orderDetails);
+        var report = await _orderService.AddOrder(orderDetails);
 
-        return NoContent();
+        return Ok(report);
+    }
+
+    [HttpPost("all-order")]
+    [ProducesResponseType(typeof(ReportData), 200)]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetAllOrder([FromQuery] DateTime dateFrom, [FromQuery] DateTime dateTo)
+    {
+        var allOrder = await _orderService.GetAllOrder(dateFrom, dateTo);
+
+        return Ok(allOrder);
     }
     
     

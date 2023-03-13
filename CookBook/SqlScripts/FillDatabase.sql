@@ -22,35 +22,35 @@ INSERT INTO GroceryItems (Name, UnitOfMeasureId, Price) VALUES ('Рыба', 1, 100);
 INSERT INTO GroceryItems (Name, UnitOfMeasureId, Price) VALUES ('Овощи', 1, 50);
 INSERT INTO GroceryItems (Name, UnitOfMeasureId, Price) VALUES ('Фрукты', 1, 80);
 
-INSERT INTO DishRecipes (Name, CuisineCategoryId, DishTypeId, Price) VALUES ('Паста карбонара', 1, 2, 200);
+INSERT INTO DishRecipes (Name, CuisineCategoryId, DishTypeId, Margin) VALUES ('Паста карбонара', 1, 2, 200);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (1, 1, 200);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (1, 6, 100);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (1, 9, 50);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (1, 5, 2);
 
-INSERT INTO DishRecipes (Name, CuisineCategoryId, DishTypeId, Price) VALUES ('Бульон с фрикадельками', 2, 1, 150);
+INSERT INTO DishRecipes (Name, CuisineCategoryId, DishTypeId, Margin) VALUES ('Бульон с фрикадельками', 2, 1, 150);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (2, 7, 500);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (2, 5, 2);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (2, 2, 5);
 
-INSERT INTO DishRecipes (Name, CuisineCategoryId, DishTypeId, Price) VALUES ('Фруктовый тарт', 3, 3, 250);
+INSERT INTO DishRecipes (Name, CuisineCategoryId, DishTypeId, Margin) VALUES ('Фруктовый тарт', 3, 3, 250);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (3, 1, 150);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (3, 9, 100);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (3, 3, 50);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (3, 5, 1);
 
-INSERT INTO DishRecipes (Name, CuisineCategoryId, DishTypeId, Price) VALUES ('Пицца маргарита', 1, 2, 300);
+INSERT INTO DishRecipes (Name, CuisineCategoryId, DishTypeId, Margin) VALUES ('Пицца маргарита', 1, 2, 300);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (4, 1, 200);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (4, 6, 100);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (4, 9, 50);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (4, 5, 2);
 
-INSERT INTO DishRecipes (Name, CuisineCategoryId, DishTypeId, Price) VALUES ('Булочки с кунжутом', 2, 3, 100);
+INSERT INTO DishRecipes (Name, CuisineCategoryId, DishTypeId, Margin) VALUES ('Булочки с кунжутом', 2, 3, 100);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (5, 1, 150);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (5, 2, 5);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (5, 5, 1);
 
-INSERT INTO DishRecipes (Name, CuisineCategoryId, DishTypeId, Price) VALUES ('Роллы с лососем', 3, 2, 350);
+INSERT INTO DishRecipes (Name, CuisineCategoryId, DishTypeId, Margin) VALUES ('Роллы с лососем', 3, 2, 350);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (6, 4, 300);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (6, 8, 200);
 INSERT INTO RecipeIngredients (DishRecipeId, GroceryItemId, Quantity) VALUES (6, 2, 5);

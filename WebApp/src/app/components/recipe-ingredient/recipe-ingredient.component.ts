@@ -1,13 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder} from "@angular/forms";
-import {BehaviorSubject, filter, first, tap} from "rxjs";
-import {
-  CookBookClient,
-  DishRecipe,
-  DishRecipeData,
-  GroceryItem, RecipeIngredient,
-  RecipeIngredientData
-} from "../../../api/CoobBookClient";
+import {filter, first} from "rxjs";
+import {CookBookClient, DishRecipeData, GroceryItem, RecipeIngredientData} from "../../../api/CoobBookClient";
 import {MatDialog} from "@angular/material/dialog";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AddEditIngredientComponent} from "../../dialogs/add-edit-ingredient/add-edit-ingredient.component";
@@ -27,7 +21,7 @@ export class RecipeIngredientComponent implements OnInit {
   dataForm = this.formBuilder.group({
     id: [null],
     name: [null],
-    price: [null],
+    margin: [null],
     cuisineCategoryId: [null],
     dishTypeId: [null]
   })
@@ -72,7 +66,6 @@ export class RecipeIngredientComponent implements OnInit {
     this.recipeIngredients.forEach(x => {
       model.recipeIngredients?.push(new RecipeIngredientData(x))
     })
-    console.log(model);
     if(!!this.recipeId){
       this.api.recipePUT(model)
         .subscribe(() => {
@@ -92,7 +85,6 @@ export class RecipeIngredientComponent implements OnInit {
   addRecipeIngredient() {
     this.dialog.open(AddEditIngredientComponent, {
       width: '400px',
-      height: '330px',
       data: {
         title: 'Добавить ингридиент',
         groceryItems: this.groceryItems
@@ -112,7 +104,6 @@ export class RecipeIngredientComponent implements OnInit {
   editRecipeIngredient(element: RecipeIngredientData) {
     this.dialog.open(AddEditIngredientComponent, {
       width: '400px',
-      height: '330px',
       data: {
         title: 'Изменить ингридиент',
         groceryItems: this.groceryItems,
